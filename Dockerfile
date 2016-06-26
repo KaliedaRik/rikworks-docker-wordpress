@@ -50,7 +50,7 @@ RUN chmod -R 755 /usr/src/wordpress/wp-content/plugins
 COPY ./local-themes/ /usr/src/wordpress/wp-content/themes/
 RUN chown -R www-data:www-data /usr/src/wordpress/wp-content/themes
 RUN chmod -R 755 /usr/src/wordpress/wp-content/themes
-COPY ./shellfiles/docker-entrypoint-cohaesus.sh /entrypoint.sh
+COPY ./shellfiles/docker-entrypoint-rikworks.sh /entrypoint.sh
 RUN chmod -R 755 /entrypoint.sh
 # !!! ENDS RIKWORKS CHANGES 2 !!!
 

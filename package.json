@@ -1,0 +1,19 @@
+{
+  "name": "rikworks-docker-wordpress",
+  "version": "1.0.0",
+  "description": "Skeleton for Dockerized WordPress + MySql + Apache",
+  "main": "index.js",
+  "scripts": {
+    "start": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KaliedaRik/rikworks-docker-wordpress.git"
+  },
+  "author": "RikWorks",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KaliedaRik/rikworks-docker-wordpress/issues"
+  },
+  "homepage": "https://github.com/KaliedaRik/rikworks-docker-wordpress#readme"
+}
