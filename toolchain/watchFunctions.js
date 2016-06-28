@@ -3,11 +3,9 @@ const watchr = require('watchr');
 const shell = require('shelljs');
 const envFile = require('./environment.js').env;
 
-var env;
-
 // Watch a directory or file
 var startWatching = (environment) => {
-  env = environment || 'development';
+  let env = environment || 'development';
 
   shellExec('docker ps')
   .then((res) => {
@@ -32,7 +30,7 @@ var startWatching = (environment) => {
                 let container = getWordpressContainerName();
                 containerExec(container, command)
                 .then((res) => {
-                  composeExec();
+                  composeExec(env);
                 })
                 .catch((err) => {
                   console.log(err.message);
@@ -44,7 +42,7 @@ var startWatching = (environment) => {
               break;
 
             default :
-              composeExec()
+              composeExec(env)
               .catch((err) => {
                 console.log(err.message);
               });
@@ -79,27 +77,20 @@ var containerExec = (container, command) => {
     return Promise.reject(new Error('containerExec error: need to supply container name'))
   }
   return new Promise((resolve, reject) => {
-    console.log(`docker exec ${container} bash ${command}`);
-    shell.exec(`docker exec ${container} bash ${command}`, (code, stdout, stderr) => {
-      if(stderr){
-        console.log(stderr);
-      }
+    shell.exec(`docker exec ${container} ${command}`, (code, stdout, stderr) => {
       resolve(stdout);
     });
   });
 };
 
-var composeExec = () => {
+var composeExec = (env) => {
   return new Promise((resolve, reject) => {
-    console.log(`docker-compose -f ${envFile.composeFile[env]} up -d --force-recreate --build`);
     shell.exec(`docker-compose -f ${envFile.composeFile[env]} up -d --force-recreate --build`, (code, stdout, stderr) => {
-      if(stderr){
-        console.log(stderr);
-      }
       resolve(stdout);
     });
   });
 };
+exports.composeExec = composeExec;
 
 var convertPathToWordpressPath = (path) => {
   let file = false;
@@ -115,7 +106,6 @@ var convertPathToWordpressPath = (path) => {
 var createDeleteFileCommand = (path) => {
   let file = convertPathToWordpressPath(path);
   if(file) {
-    console.log(`rm -rf ${file}`);
     return `rm -rf ${file}`;
   }
   return false;

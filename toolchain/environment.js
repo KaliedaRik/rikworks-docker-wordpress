@@ -8,5 +8,10 @@ exports.env = {
 		"development":"docker-compose-development.yml",
 		"stage": "docker-compose-stage.yml",
 		"production": "docker-compose-production.yml"
+	},
+	"database": {
+		"name": "wordpress",
+		"user": "wordpress",
+		"pass": "wordpress"
 	}
 };

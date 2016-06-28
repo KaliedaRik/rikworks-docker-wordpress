@@ -4,7 +4,7 @@
   "description": "Skeleton for Dockerized WordPress + MySql + Apache",
   "main": "index.js",
   "scripts": {
-    "start": "index.js"
+    "watch": "node toolchain/watch.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/KaliedaRik/rikworks-docker-wordpress/issues"
   },
-  "homepage": "https://github.com/KaliedaRik/rikworks-docker-wordpress#readme"
+  "homepage": "https://github.com/KaliedaRik/rikworks-docker-wordpress#readme",
+  "dependencies": {
+    "moment": "^2.13.0",
+    "shelljs": "^0.7.0",
+    "watchr": "^2.4.13"
+  }
 }
