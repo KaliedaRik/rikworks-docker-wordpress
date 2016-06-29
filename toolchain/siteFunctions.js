@@ -3,50 +3,57 @@ const moment = require('moment');
 const shell = require('shelljs');
 const environment = require('./environment.js').env;
 
-// Save database to local .gz file
-var backupDatabase = (env) => {
-  let container = getDatabaseContainerName(env);
+// Save site files to local .tar.gz file
+var backupSite = (env) => {
+  let container = getWordpressContainerName(env);
   let file = createFileName(env);
   console.log(`Saving to ${file}`);
 
   shellExec('docker ps')
   .then((res) => {
-      let cmd = `mysqldump --add-drop-table -u ${environment.database.user} -p${environment.database.pass} ${environment.database.name} | gzip > ${file}`;
+      let cmd = `tar czf /tempfile.tar.gz ./`;
+      return containerExec(container, cmd);
+  })
+  .then((res) => {
+      let cmd = `docker cp ${container}:/tempfile.tar.gz ${file}`; //
+      return shellExec(cmd);
+  })
+  .then((res) => {
+      let cmd = `rm /tempfile.tar.gz`;
       containerExec(container, cmd);
   })
   .catch((err) => {
     console.log(err.message);
   });
 };
-exports.backupDatabase = backupDatabase;
+exports.backupSite = backupSite;
 
-// Restore db from local .gz file
-var restoreDatabase = (env, file) => {
+// Restore site files from local .tar.gz file
+var restoreSite = (env, file) => {
   if(file){
-    let container = getDatabaseContainerName(env);
-    let tempfile = `./database/temp_${moment().format('YYYYMMDDHHmmss')}.sql`;
-    file = `./database/${file}`;
+    let container = getWordpressContainerName(env);
+    file = `./sitestore/${file}`;
     console.log(`Restoring from ${file}`);
 
     shellExec('docker ps')
     .then((res) => {
-      let cmd = `gzip -dc ${file} > ${tempfile}`;
-      return shellExec(cmd);
+        let cmd = `docker cp ${file} ${container}:/tempfile.tar.gz`; //
+        return shellExec(cmd);
     })
     .then((res) => {
-      let cmd = `mysql -u ${environment.database.user} -p${environment.database.pass} ${environment.database.name} < ${tempfile}`;
-      return containerExec(container, cmd);
+        let cmd = `tar xzf /tempfile.tar.gz`;
+        return containerExec(container, cmd);
     })
     .then((res) => {
-      let cmd = `rm ${tempfile}`;
-      shellExec(cmd);
+        let cmd = `rm /tempfile.tar.gz`;
+        containerExec(container, cmd);
     })
     .catch((err) => {
       console.log(err.message);
     });
   }
 };
-exports.restoreDatabase = restoreDatabase;
+exports.restoreSite = restoreSite;
 
 var shellExec = (command) => {
   if(!command.toLowerCase){
@@ -73,10 +80,10 @@ var containerExec = (container, command) => {
   });
 };
 
-var getDatabaseContainerName = (env) => {
-  return `${environment.namespace[env]}-db`;
+var getWordpressContainerName = (env) => {
+  return `${environment.namespace[env]}-wp`;
 };
 
 var createFileName = (env) => {
-  return `./database/${environment.namespace[env]}-${env}_${moment().format('YYYY-MM-DD_HHmmss')}.sql.gz`;
+  return `./sitestore/${environment.namespace[env]}-${env}_${moment().format('YYYY-MM-DD_HHmmss')}.tar.gz`;
 };

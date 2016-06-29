@@ -1,14 +1,14 @@
-const db = require('./databaseFunctions.js');
+const db = require('./siteFunctions.js');
 
 var args = process.argv.slice(2),
 	action, env, file;
 
 var backup = () => {
-	db.backupDatabase(env);
+	db.backupSite(env);
 };
 
 var restore = () => {
-	db.restoreDatabase(env, file);
+	db.restoreSite(env, file);
 };
 
 const actions = {

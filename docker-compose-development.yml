@@ -1,20 +1,21 @@
 # To use this template:
 
-# replace TEST with the namespace of your choice
+# replace NAMESPACE with the namespace of your choice
 # - should allow different wordpress projects to run on the same dockerised server/machine
 # - (though that will also require changing the port that one of the projects listens on)
 
 # for security, the WORDPRESS_ and MYSQL_ environment variables should be changed
 # - except WORDPRESS_DB_HOST
 
-# save this file under a new name eg docker-compose-development.yml
-# - can save as docker-compose.yml to simplify the invocation (no -f arg needed)
-# - but in that case cannot have different docker-compose files for different environments
+# record the namespace used in the toolchain/environment.js file
+# - any changes to the compose.yml filename also need to be recorded in environment.js
 
 # invocation, from project root folder:
-# $ docker-compose -f docker-compose-development.yml -d
+# $ docker-compose -f [compose-file].yml -d
 # or even:
-# $ docker-compose -f docker-compose-development.yml up -d --force-recreate --build
+# $ docker-compose -f [compose-file] up -d --force-recreate --build
+
+# (This is all handled automatically when using the toolchain/watch.js functionality)
 
 version: '2'
 
