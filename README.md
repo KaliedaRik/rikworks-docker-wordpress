@@ -10,35 +10,35 @@ The toolchain functionality relies on the namespace for each environment, and th
 
 Note: cannot use docker images for the data, as files and database data are stored in persistent volumes (which, despite running in their own containers, do not actually include that data in their images). Instead have to rely on either backup plugins or zipped data files to port the site data over.
 
-1. Save this in a local projects folder under a more appropriate name
+> Save this in a local projects folder under a more appropriate name
 
-2. Choose a namespace for the development environment, and update
-- docker-compose-development.yml
-- toolchain/environment.js
+> Choose a namespace for the development environment, and update
+  - docker-compose-development.yml
+  - toolchain/environment.js
 
-3. Make sure the bash shell is connected to the docker machine (see Toolchain section below), and start the watch task:
+> Make sure the bash shell is connected to the docker machine (see Toolchain section below), and start the watch task:
 
 $ node toolchain/watch.js
 
-4. Fill in the basic details to build a completely new Wordpress site
+> Fill in the basic details to build a completely new Wordpress site
 
 
 ### Using a backup plugin
 (Note: not tested)
 
-1. Install the backup plugin into the new wordpress site
+> Install the backup plugin into the new wordpress site
 
-2. Get the backup files (eg if they're saved into Dropbox) and restore the site 
+> Get the backup files (eg if they're saved into Dropbox) and restore the site 
 
 
 ### Using gzipped mysqldump file and a tar.gz archive of the wordpress files
 (archive: everything in the /var/www/html folder of the original site)
 
-1. Move the mysqldump file to the database folder
+> Move the mysqldump file to the database folder
 
-2. Move the archive file to the sitestore folder
+> Move the archive file to the sitestore folder
 
-3. Run:
+> Run:
 
 $ node toolchain/site.js restore development [archive-file.tar.gz]
 $ node toolchain/database.js restore development [mysqldump-file.sql.gz]
@@ -46,11 +46,11 @@ $ node toolchain/database.js restore development [mysqldump-file.sql.gz]
 
 ### Localising themes and plugins
 
-1. Actively developed themes (or child themes) need to be copied over to the local machine, and placed into local-themes 
+> Actively developed themes (or child themes) need to be copied over to the local machine, and placed into local-themes 
 
 $ docker cp [wp-container-name]:/var/www/html/wp-content/themes[theme-folder-name] ./local-themes 
 
-2. Similarly, any plugins that will be actively developed need to be copied over to local-plugins
+> Similarly, any plugins that will be actively developed need to be copied over to local-plugins
 
 $ docker cp [wp-container-name]:/var/www/html/wp-content/plugins[plugin-folder-name] ./local-plugins
 
@@ -58,15 +58,15 @@ $ docker cp [wp-container-name]:/var/www/html/wp-content/plugins[plugin-folder-n
 
 
 ## Toolchain - setup and run
-1. Use nvm to make sure shell/cli is running a sufficiently advanced version of node - the toolchain uses node v6.0.0+
+> Use nvm to make sure shell/cli is running a sufficiently advanced version of node - the toolchain uses node v6.0.0+
 
-2. Run npm install
+> Run npm install
 
-3. Make sure you have a docker machine created/started and connected to shell - see below
+> Make sure you have a docker machine created/started and connected to shell - see below
 
-4. Create the containers locally by running the appropriate docker-compose command - see below. If this is the first time running in the docker machine, the build will take a little while (running the watch toolchain function should do this automatically)
+> Create the containers locally by running the appropriate docker-compose command - see below. If this is the first time running in the docker machine, the build will take a little while (running the watch toolchain function should do this automatically)
 
-5. Start the toolchain watch process - environment can be one of: 'production', 'stage', 'development' (default)
+> Start the toolchain watch process - environment can be one of: 'production', 'stage', 'development' (default)
 
 $ node toolchain/watch.js development
 
