@@ -17,7 +17,7 @@ Note: cannot use docker images for the data, as files and database data are stor
   - toolchain/environment.js
 
 > Make sure the bash shell is connected to the docker machine (see Toolchain section below), and start the watch task:
-$ node toolchain/watch.js
+  - node toolchain/watch.js
 
 > Fill in the basic details to build a completely new Wordpress site
 
@@ -38,17 +38,17 @@ $ node toolchain/watch.js
 > Move the archive file to the sitestore folder
 
 > Run:
-$ node toolchain/site.js restore development [archive-file.tar.gz]
-$ node toolchain/database.js restore development [mysqldump-file.sql.gz]
+  - node toolchain/site.js restore development [archive-file.tar.gz]
+  - node toolchain/database.js restore development [mysqldump-file.sql.gz]
 
 
 ### Localising themes and plugins
 
 > Actively developed themes (or child themes) need to be copied over to the local machine, and placed into local-themes 
-$ docker cp [wp-container-name]:/var/www/html/wp-content/themes[theme-folder-name] ./local-themes 
+  - docker cp [wp-container-name]:/var/www/html/wp-content/themes[theme-folder-name] ./local-themes 
 
 > Similarly, any plugins that will be actively developed need to be copied over to local-plugins
-$ docker cp [wp-container-name]:/var/www/html/wp-content/plugins[plugin-folder-name] ./local-plugins
+  - docker cp [wp-container-name]:/var/www/html/wp-content/plugins[plugin-folder-name] ./local-plugins
 
 (If any wordpress files outside of the theme and plugins has been changed, then the toolchain files watch.js and watchFunction.js will need to be adapted to handle local coding for those files)
 
@@ -63,7 +63,7 @@ $ docker cp [wp-container-name]:/var/www/html/wp-content/plugins[plugin-folder-n
 > Create the containers locally by running the appropriate docker-compose command - see below. If this is the first time running in the docker machine, the build will take a little while (running the watch toolchain function should do this automatically)
 
 > Start the toolchain watch process - environment can be one of: 'production', 'stage', 'development' (default)
-$ node toolchain/watch.js development
+  - node toolchain/watch.js development
 
 The watch process will capture additions, updates and deletions to files in the local-plugins and local-themes folders, and automatically recreate the changes in the wordpress container/volume
 
@@ -76,7 +76,7 @@ Most work should be done in the local theme (ideally a child theme, but whatever
 Backup files can be found in the ./database folder
 
 Backup:
-$ toolchain/database.js [command] [environment] [file]
+> toolchain/database.js backup [environment] [file]
   - toolchain/database.js // will backup the database from the development environment
   - toolchain/database.js backup // will backup the database from the development environment
   - toolchain/database.js backup development
@@ -84,6 +84,7 @@ $ toolchain/database.js [command] [environment] [file]
   - toolchain/database.js backup production
 
 Restore:
+> toolchain/database.js restore [environment] [file]
   - toolchain/database.js restore development filename.sql.gz
   - toolchain/database.js restore stage filename.sql.gz
   - toolchain/database.js restore production filename.sql.gz
@@ -95,7 +96,7 @@ Restore:
 Backup files can be found in the ./sitestore folder - warning: multi-MB size files!
 
 Backup:
-$ toolchain/site.js [command] [environment] [file]
+> toolchain/site.js backup [environment] [file]
   - toolchain/site.js // will backup the site folders and files from the development environment
   - toolchain/site.js backup // will backup the site folders and files from development
   - toolchain/site.js backup development
@@ -103,44 +104,45 @@ $ toolchain/site.js [command] [environment] [file]
   - toolchain/site.js backup production
 
 Restore:
+> toolchain/site.js restore [environment] [file]
   - toolchain/site.js restore development filename.tar.gz
   - toolchain/site.js restore stage filename.tar.gz
   - toolchain/site.js restore production filename.tar.gz
 
 
 ## Creating a docker machine for local development
-$ docker-machine create --driver virtualbox [name-of-machine]
+> docker-machine create --driver virtualbox [name-of-machine]
 
 
 ### Other useful docker-machine commands
-$ docker-machine ls
+> docker-machine ls
   - lists all available machines
   - can get the ip address of a machine from this list
   - also shows the active machine - ie on which machine docker/docker-compose commands will operate 
 
-$ docker-machine ssh [name-of-machine]
+> docker-machine ssh [name-of-machine]
   - for a more interactive experience with a machine
 
-$ docker-machine start [name-of-machine]
+> docker-machine start [name-of-machine]
   - to start a machine
 
-$ docker-machine stop [name-of-machine]
+> docker-machine stop [name-of-machine]
   - to stop a machine
 
-$ docker-machine restart [name-of-machine]
+> docker-machine restart [name-of-machine]
   - for restarting a machine
   - useful for emulating server restarts
 
-$ docker-machine rm -y [name-of-machine]
+> docker-machine rm -y [name-of-machine]
   - deleting a local machine
 
 
 ### Making the machine active (connecting the cli/shell to it)
 For Mac/linux bash
-$ eval $(docker-machine env [name-of-machine])
+> eval $(docker-machine env [name-of-machine])
 
 For Windows powershell
-$ docker-machine env [name-of-machine] | Invoke-Expression
+> docker-machine env [name-of-machine] | Invoke-Expression
 
 
 ## To start containers locally
@@ -161,25 +163,25 @@ Make sure a docker machine is running, and active (ie connected to the cli/shell
 
 
 ### Useful docker commands:
-$ docker ps
+> docker ps
   - list all running containers
 
-$ docker ps -a
+> docker ps -a
   - list all containers on machine, this will pick up the persistent volume containers
 
-$ docker images
+> docker images
   - lists all the container images on machine
   - if the images need clearing up, try running (bash cli/shell only; not powershell):
-$ docker rmi $(docker images -q --filter "dangling=true")
+> docker rmi $(docker images -q --filter "dangling=true")
 
-$ docker logs [name-of-container]
+> docker logs [name-of-container]
   - to display the main logfile for the container
 
-$ docker exec -it [name-of-container] bash
+> docker exec -it [name-of-container] bash
   - to get an interactive shell directly inside the container
   - container does need to be running!
 
-$ docker inspect [name-of-container]
+> docker inspect [name-of-container]
   - all the info you will ever want to know about the container
   - filtering options are available - see https://docs.docker.com/engine/reference/commandline/inspect/
 
