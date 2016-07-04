@@ -1,0 +1,11 @@
+{
+  "name": "rikworks-docker-wordpress",
+  "version": "0.1.0",
+  "description": "Dockerising WordPress (Apache + MySql) with persistent volume containers, using Nginx as a reverse proxy for one or more WordPress installations (because website developers have been known to do weird stuff) within a single site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rikworks",
+  "license": "MIT"
+}
