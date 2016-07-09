@@ -53,12 +53,20 @@ var start = (site) => {
     templateFile = res;
     for(let i = 0, iz = sites.length; i < iz; i++){
       let mysite = sites[i];
-      let channel = environment.sites[mysite].ipChannel;
-      let namespace = environment.sites[mysite].containerNamespace;
-      let raw = templateFile.replace(/{{sitename}}/g, namespace);
-      let cooked = raw.replace(/{{sitechannel}}/g, channel);
+      let data = environment.sites[mysite];
+      let channel = data.ipChannel;
+      let namespace = data.containerNamespace;
+      let db = data.database;
+      let site0 = `${templatefile}`;
+      let site1 = site0.replace(/{{sitename}}/g, namespace);
+      let site2 = site1.replace(/{{sitechannel}}/g, channel);
+      let site3 = site2.replace(/{{dbuser}}/g, db.user);
+      let site4 = site3.replace(/{{dbpass}}/g, db.pass);
+      let site5 = site4.replace(/{{dbname}}/g, db.name);
+      let site6 = site5.replace(/{{dbrootpass}}/g, db.rootpass);
+      let site7 = site6.replace(/{{dbprefix}}/g, db.prefix);
       buildComposeActions.push(new Promise((resolve, reject) => {
-        fs.writeFile(`./compose/${namespace}.yml`, cooked, 'utf8', (err) => {
+        fs.writeFile(`./compose/${namespace}.yml`, site7, 'utf8', (err) => {
           if (err){
             reject(err);
           };
