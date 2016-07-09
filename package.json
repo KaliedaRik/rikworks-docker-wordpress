@@ -1,23 +1,16 @@
 {
-  "name": "rikworks-docker-wordpress",
-  "version": "1.0.0",
-  "description": "Skeleton for Dockerized WordPress + MySql + Apache",
+  "name": "cohaesus-docker-wordpress",
+  "version": "0.1.0",
+  "description": "Dockerising WordPress (Apache + MySql) with persistent volume containers, using Nginx as a reverse proxy for one or more WordPress installations (because website developers have been known to do weird stuff) within a single site",
   "main": "index.js",
   "scripts": {
-    "watch": "node toolchain/watch.js"
+    "watch": "node toolchain/watch.js",
+    "start": "node toolchain/start.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/KaliedaRik/rikworks-docker-wordpress.git"
-  },
-  "author": "RikWorks",
+  "author": "Cohaesus",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/KaliedaRik/rikworks-docker-wordpress/issues"
-  },
-  "homepage": "https://github.com/KaliedaRik/rikworks-docker-wordpress#readme",
   "dependencies": {
-    "moment": "^2.13.0",
+    "moment": "^2.14.1",
     "shelljs": "^0.7.0",
     "watchr": "^2.4.13"
   }

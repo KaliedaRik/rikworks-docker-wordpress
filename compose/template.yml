@@ -1,0 +1,58 @@
+version: '2'
+
+services:
+  nginx:
+    depends_on:
+      - {{sitename}}-wp
+
+  {{sitename}}-db-data:
+    container_name: {{sitename}}-db-data
+    build: ./dockerfiles/{{sitename}}/vol-db
+    image: {{sitename}}-db-data-image
+    restart: never
+
+  {{sitename}}-db:
+    container_name: {{sitename}}-db
+    build: ./dockerfiles/{{sitename}}/db
+    image: {{sitename}}-db-image
+    restart: always
+    volumes:
+      - {{sitename}}-db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    networks:
+      mynet:
+        ipv4_address: 172.25.0.20{{sitechannel}}
+
+  {{sitename}}-wp-data:
+    container_name: {{sitename}}-wp-data
+    build: ./dockerfiles/{{sitename}}/vol-wp
+    image: {{sitename}}-wp-data-image
+    restart: never
+
+  {{sitename}}-wp:
+    container_name: {{sitename}}-wp
+    build: ./dockerfiles/{{sitename}}/wp
+    image: {{sitename}}-wp-image
+    restart: always
+    depends_on:
+      - {{sitename}}-db
+    volumes:
+      - {{sitename}}-wp-data:/var/www/html
+    # ports:
+    #   - "8000:80"
+    environment:
+      WORDPRESS_DB_HOST: {{sitename}}-db:3306
+      WORDPRESS_DB_PASSWORD: wordpress
+    networks:
+      mynet:
+        ipv4_address: 172.25.0.10{{sitechannel}}
+
+volumes:
+  {{sitename}}-db-data:
+    external: false
+  {{sitename}}-wp-data:
+    external: false

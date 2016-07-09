@@ -3,10 +3,25 @@ const moment = require('moment');
 const shell = require('shelljs');
 const environment = require('./environment.js').env;
 
+// Copy site files to local folder
+var pullSiteDataToLocal = (site) => {
+  let container = `${environment.sites[site].containerNamespace}-wp`;
+
+  shellExec('docker ps')
+  .then((res) => {
+      let cmd = `docker cp ${container}:/var/www/html/. ./${environment.sites[site].directoryName}`;
+      shellExec(cmd);
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+};
+exports.pullSiteDataToLocal = pullSiteDataToLocal;
+
 // Save site files to local .tar.gz file
-var backupSite = (env) => {
-  let container = getWordpressContainerName(env);
-  let file = createFileName(env);
+var backupSite = (site) => {
+  let container = `${environment.sites[site].containerNamespace}-wp`;
+  let file = createFileName(site);
   console.log(`Saving to ${file}`);
 
   shellExec('docker ps')
@@ -29,9 +44,9 @@ var backupSite = (env) => {
 exports.backupSite = backupSite;
 
 // Restore site files from local .tar.gz file
-var restoreSite = (env, file) => {
+var restoreSite = (site, file) => {
   if(file){
-    let container = getWordpressContainerName(env);
+    let container = `${environment.sites[site].containerNamespace}-wp`;
     file = `./sitestore/${file}`;
     console.log(`Restoring from ${file}`);
 
@@ -80,10 +95,6 @@ var containerExec = (container, command) => {
   });
 };
 
-var getWordpressContainerName = (env) => {
-  return `${environment.namespace[env]}-wp`;
-};
-
-var createFileName = (env) => {
-  return `./sitestore/${environment.namespace[env]}-${env}_${moment().format('YYYY-MM-DD_HHmmss')}.tar.gz`;
+var createFileName = (site) => {
+  return `./sitestore/${environment.sites[site].backupNamespace}_${moment().format('YYYY-MM-DD_HHmmss')}.tar.gz`;
 };

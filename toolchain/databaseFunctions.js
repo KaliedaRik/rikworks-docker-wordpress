@@ -4,14 +4,15 @@ const shell = require('shelljs');
 const environment = require('./environment.js').env;
 
 // Save database to local .gz file
-var backupDatabase = (env) => {
-  let container = getDatabaseContainerName(env);
-  let file = createFileName(env);
+var backupDatabase = (site) => {
+  let container = `${environment.sites[site].containerNamespace}-db`;
+  let file = createFileName(site);
   console.log(`Saving to ${file}`);
 
   shellExec('docker ps')
   .then((res) => {
-      let cmd = `mysqldump --add-drop-table -u ${environment.database.user} -p${environment.database.pass} ${environment.database.name} | gzip > ${file}`;
+      let thisSite = environment.sites[site].database;
+      let cmd = `mysqldump --add-drop-table -u ${thisSite.user} -p${thisSite.pass} ${thisSite.name} | gzip > ${file}`;
       containerExec(container, cmd);
   })
   .catch((err) => {
@@ -21,9 +22,9 @@ var backupDatabase = (env) => {
 exports.backupDatabase = backupDatabase;
 
 // Restore db from local .gz file
-var restoreDatabase = (env, file) => {
+var restoreDatabase = (site, file) => {
   if(file){
-    let container = getDatabaseContainerName(env);
+    let container = `${environment.sites[site].containerNamespace}-db`;
     let tempfile = `./database/temp_${moment().format('YYYYMMDDHHmmss')}.sql`;
     file = `./database/${file}`;
     console.log(`Restoring from ${file}`);
@@ -34,7 +35,8 @@ var restoreDatabase = (env, file) => {
       return shellExec(cmd);
     })
     .then((res) => {
-      let cmd = `mysql -u ${environment.database.user} -p${environment.database.pass} ${environment.database.name} < ${tempfile}`;
+      let thisSite = environment.sites[site].database;
+      let cmd = `mysql -u ${thisSite.user} -p${thisSite.pass} ${thisSite.name} < ${tempfile}`;
       return containerExec(container, cmd);
     })
     .then((res) => {
@@ -73,10 +75,6 @@ var containerExec = (container, command) => {
   });
 };
 
-var getDatabaseContainerName = (env) => {
-  return `${environment.namespace[env]}-db`;
-};
-
-var createFileName = (env) => {
-  return `./database/${environment.namespace[env]}-${env}_${moment().format('YYYY-MM-DD_HHmmss')}.sql.gz`;
+var createFileName = (site) => {
+  return `./database/${environment.sites[site].backupNamespace}_${moment().format('YYYY-MM-DD_HHmmss')}.sql.gz`;
 };
