@@ -1,0 +1,24 @@
+version: '2'
+
+services:
+  nginx:
+    container_name: nginx
+    build: ./dockerfiles/nginx
+    image: nginx-image
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+#     depends_on:
+#       - site01-wp
+    networks:
+      mynet:
+        ipv4_address: 172.25.0.25
+
+networks:
+  mynet:
+    driver: bridge
+    ipam:
+      config:
+        - 
+          subnet: 172.25.0.0/24
