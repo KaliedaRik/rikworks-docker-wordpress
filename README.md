@@ -7,6 +7,7 @@ Create a folder and download these files into it, cd into folder
 Open a terminal and cd to folder. Make sure you are running node v6 (install nvm if necessary and download node v6.0.0 or later)
 
 > nvm use v6.0.0
+
 > npm install
 
 (Assuming docker, docker compose, docker machine already installed locally)
@@ -14,6 +15,7 @@ Open a terminal and cd to folder. Make sure you are running node v6 (install nvm
 Create a local docker machine to host the docker containers
 
 > docker-machine create --driver virtualbox [namespace]-machine
+
 > eval $(docker-machine env [namespace]-machine)
 
 Update the environment file with the site's namespace:
@@ -42,11 +44,13 @@ To pull changes over to the local machine, delete all the contents in the site's
 To get a backup of the site files (will be stored in ./sitestore folder), or to restore site files from backup:
 
 > node toolchain/site.js backup [namespace]
+
 > node toolchain/site.js restore [namespace] [file.tar.gz]
 
 To get a backup of the site database (will be stored in ./database folder), or to restore site database from backup:
 
 > node toolchain/database.js backup [namespace]
+
 > node toolchain/database.js restore [namespace] [file.sql.gz]
 
 ### Developing the site locally
@@ -54,6 +58,7 @@ To get a backup of the site database (will be stored in ./database folder), or t
 When the site is setup, the code creates a local folder (name defined in ./toolchain/environment.js) to hold the sites files. The toolchain includes functionality to watch this folder for file changes, and to reflect local changes in the container's code. To get this functionality working:
 
 > node toolchain/site.js get [namespace]
+
 > node toolchain/watch.js
 
 Be aware that the default toolchain does not include any functionality beyond this. The toolchain can be extended (eg adding linters, scss preprocessing, etc) in the normal ways, either by including the tool of choice in the build, or by extending the toolchain itself (it uses node/npm modules, so is easily extendible - the watch functionality can be found in ./toolchain/watchFunctions.js)

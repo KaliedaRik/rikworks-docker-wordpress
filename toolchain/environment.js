@@ -14,9 +14,11 @@ exports.env = {
 			"containerNamespace": "site01",
 			"backupNamespace": "site01",
 			"database": {
+				"name": "wordpress",
+				"rootpass": "CHANGE_ME_IMPORTANT!",
+				"prefix": "wp",
 				"user": "wordpress",
-				"pass": "wordpress",
-				"name": "wordpress"
+				"pass": "wordpress"
 			}
 		},
 		// "site02": {
@@ -25,9 +27,11 @@ exports.env = {
 		// 	"containerNamespace": "site02",
 		// 	"backupNamespace": "site02",
 		// 	"database": {
+		// 		"name": "wordpress",
+		// 		"rootpass": "CHANGE_ME_IMPORTANT!",
+		// 		"prefix": "wp",
 		// 		"user": "wordpress",
-		// 		"pass": "wordpress",
-		// 		"name": "wordpress"
+		// 		"pass": "wordpress"
 		// 	}
 		// },
 	}
