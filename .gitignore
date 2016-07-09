@@ -1,5 +1,5 @@
 node_modules
-database
-sitestore
+database/**/*.gz
+sitestore/**/*.gz
 .DS_Store
 */**/.DS_Store
